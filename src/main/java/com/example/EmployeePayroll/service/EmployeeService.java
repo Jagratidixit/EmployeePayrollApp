@@ -1,5 +1,6 @@
 package com.example.EmployeePayroll.service;
 
+import com.example.EmployeePayroll.dto.EmployeeDTO;
 import com.example.EmployeePayroll.model.Employee;
 import com.example.EmployeePayroll.repository.EmployeeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,40 +11,21 @@ import java.util.Optional;
 
 @Service
 public class EmployeeService {
-
     @Autowired
-    private EmployeeRepo employeeRepository; // Dependency Injection
+    private EmployeeRepo employeeRepository;
 
-    // Get all users
+    public Employee createUser(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        employee.setName(employeeDTO.getName());
+        employee.setSalary(employeeDTO.getSalary());
+        return employeeRepository.save(employee);
+    }
+
     public List<Employee> getAllUsers() {
         return employeeRepository.findAll();
     }
 
-    // Get user by ID
     public Optional<Employee> getUserById(Long id) {
         return employeeRepository.findById(id);
-    }
-
-    // Create user
-    public Employee createUser(Employee user) {
-        return employeeRepository.save(user);
-    }
-
-    // Update user
-    public Optional<Employee> updateUser(Long id, Employee userDetails) {
-        return employeeRepository.findById(id).map(user -> {
-            user.setName(userDetails.getName());  // Update name
-            user.setSalary(userDetails.getSalary());  // Corrected salary update
-            return employeeRepository.save(user);
-        });
-    }
-
-    // Delete user
-    public boolean deleteUser(Long id) {
-        if (employeeRepository.existsById(id)) {
-            employeeRepository.deleteById(id);
-            return true;
-        }
-        return false;
     }
 }
